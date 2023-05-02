@@ -1,0 +1,22 @@
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.card-footer .button-container {
+  width: 200px;
+}
+
+.card-footer .button-container .btn {
+  width: 50%;
+}
+
+@media only screen and (max-width: 768px) {
+  .card-footer {
+    display: flex;
+  }
+
+  .card-footer .button-container {
+    width: 120px;
+  }
+}

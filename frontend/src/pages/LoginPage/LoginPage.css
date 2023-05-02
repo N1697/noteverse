@@ -1,0 +1,17 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+}
+
+@media only screen and (max-width: 768px) {
+  .button-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .login-container .row .col {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+  }
+}
