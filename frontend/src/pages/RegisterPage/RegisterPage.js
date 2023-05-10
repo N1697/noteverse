@@ -39,13 +39,6 @@ const RegisterPage = () => {
       console.log(message);
     }
 
-    if (success || user) {
-      navigate("/mynotes");
-      toast.success("Registration successful", {
-        icon: "😄",
-      });
-    }
-
     dispatch(reset());
   }, [user, error, success, message, navigate, dispatch]);
 
@@ -113,7 +106,18 @@ const RegisterPage = () => {
       avatar,
     };
 
-    dispatch(registerUser(userData));
+    dispatch(registerUser(userData))
+      .then(() => {
+        toast.success("Registration successful", {
+          icon: "😄",
+        });
+        navigate("/mynotes");
+      })
+      .catch(() => {
+        toast.error("Registration failed", {
+          icon: "😭",
+        });
+      });
   };
 
   if (loading) {

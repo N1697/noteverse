@@ -34,13 +34,6 @@ const LoginPage = () => {
       console.log(message);
     }
 
-    if (success || user) {
-      navigate("/mynotes");
-      toast.success("Login successful", {
-        icon: "😄",
-      });
-    }
-
     dispatch(reset());
   }, [user, error, success, message, navigate, dispatch]);
 
@@ -62,7 +55,18 @@ const LoginPage = () => {
       password,
     };
 
-    dispatch(loginUser(userData));
+    dispatch(loginUser(userData))
+      .then(() => {
+        toast.success("Login successful", {
+          icon: "😄",
+        });
+        navigate("/mynotes");
+      })
+      .catch(() => {
+        toast.error("Login failed", {
+          icon: "😭",
+        });
+      });
   };
 
   if (loading) {
