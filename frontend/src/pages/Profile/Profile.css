@@ -1,0 +1,44 @@
+.profile-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.avatar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar {
+  width: 550px;
+  height: 550px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.avatar:hover {
+  opacity: 0.8;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 550px;
+  height: 550px;
+}
+
+@media only screen and (max-width: 1200px) {
+  .profile-container {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+}
+
+@media only screen and (max-width: 428px) {
+  .avatar {
+    width: 300px;
+    height: 300px;
+  }
+}

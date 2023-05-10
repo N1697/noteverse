@@ -7,8 +7,11 @@ import axios from "axios";
 import Loading from "../../components/Loading/Loading";
 import ErrorAlert from "../../components/ErrorAlert/ErrorAlert";
 import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+import { registerUser, reset } from "../../features/user/userSlice.js";
 
 const RegisterPage = () => {
+  //States
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,11 +21,33 @@ const RegisterPage = () => {
       "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
   });
   const { name, email, password, confirmPassword, avatar } = formData;
-
-  const [loading, setLoading] = useState(false);
   const [avatarMessage, setAvatarMessage] = useState("");
 
+  //Hooks
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user, loading, error, success, message } = useSelector(
+    (state) => state.user
+  );
+
+  //Event Handlers
+  useEffect(() => {
+    if (error) {
+      toast.error(message, {
+        icon: "😭",
+      });
+      console.log(message);
+    }
+
+    if (success || user) {
+      navigate("/mynotes");
+      toast.success("Registration successful", {
+        icon: "😄",
+      });
+    }
+
+    dispatch(reset());
+  }, [user, error, success, message, navigate, dispatch]);
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -35,7 +60,7 @@ const RegisterPage = () => {
         icon: "🖼️",
       });
     }
-    setAvatarMessage(null);
+    // setAvatarMessage(null);
 
     //If the selected file is an image
     if (file.type === "image/jpeg" || file.type === "image/png") {
@@ -69,8 +94,6 @@ const RegisterPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log(formData);
-
     if (!name || !email || !password || !confirmPassword) {
       return toast.error("Please fill up the fields", {
         icon: "✏️",
@@ -83,39 +106,14 @@ const RegisterPage = () => {
       });
     }
 
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
+    const userData = {
+      name,
+      email,
+      password,
+      avatar,
+    };
 
-      setLoading(true);
-
-      const { data } = await axios.post(
-        "/api/users",
-        {
-          name,
-          email,
-          password,
-          avatar,
-        },
-        config
-      );
-
-      toast.success("Registration successful", {
-        icon: "😄",
-      });
-
-      setLoading(false);
-      localStorage.setItem("User", JSON.stringify(data));
-      navigate("/mynotes");
-    } catch (error) {
-      setLoading(false);
-      toast.error(error.response.data.message, {
-        icon: "😭",
-      });
-    }
+    dispatch(registerUser(userData));
   };
 
   if (loading) {
@@ -129,6 +127,7 @@ const RegisterPage = () => {
           {/* Name */}
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
+
             <Form.Control
               type="name"
               placeholder="Enter your name"

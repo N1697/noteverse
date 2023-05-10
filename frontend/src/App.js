@@ -8,17 +8,29 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MyNotes from "./pages/MyNotes/MyNotes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import NewNote from "./pages/NewNote/NewNote";
+import EditNote from "./pages/EditNote/EditNote";
+import { useState } from "react";
+import Profile from "./pages/Profile/Profile";
+import PageNotFound from "./pages/PageNotFound/PageNotFound";
 
 function App() {
+  const [search, setSearch] = useState("");
+  //The search bar of the Header will set the 'search' state
+  //and MyNotes will use the 'search' state to filter
   return (
     <Router>
-      <Header />
+      <Header setSearch={setSearch} />
       <main>
         <Routes>
           <Route path="/" element={<LandingPage />} exact />
           <Route path="/login" element={<LoginPage />} exact />
           <Route path="/register" element={<RegisterPage />} exact />
-          <Route path="/mynotes" element={<MyNotes />} />
+          <Route path="/mynotes" element={<MyNotes search={search} />} exact />
+          <Route path="/createNote" element={<NewNote />} exact />
+          <Route path="/note/:id" element={<EditNote />} exact />
+          <Route path="/profile" element={<Profile />} exact />
+          <Route path="*" element={<PageNotFound />} exact />
         </Routes>
       </main>
       <Footer />

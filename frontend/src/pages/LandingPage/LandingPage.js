@@ -7,9 +7,9 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const User = localStorage.getItem("User");
+    const user = localStorage.getItem("user");
 
-    User && navigate("/mynotes");
+    user && navigate("/mynotes");
   }, [navigate]);
 
   return (

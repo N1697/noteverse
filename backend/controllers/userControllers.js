@@ -86,8 +86,58 @@ const getUser = asyncHandler(async (req, res) => {
   res.status(200).json(req.user);
 });
 
+// @desc    Set user profile
+// @route   POST /api/users/profile
+// @access  Private
+const setProfile = asyncHandler(async (req, res) => {
+  let { name, email, password, avatar } = req.body;
+
+  const user = await User.findById({ _id: req.user._id });
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  name = name ?? user.name;
+  email = email ?? user.email;
+  avatar = avatar ?? user.avatar;
+  if (password && (await bcrypt.compare(password, user.password)) === false) {
+    const salt = await bcrypt.genSalt(10);
+    password = await bcrypt.hash(password, salt);
+  }
+  if (!password) {
+    password = user.password;
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    { _id: user._id },
+    {
+      name,
+      email,
+      password,
+      avatar,
+    },
+    { new: true }
+  );
+
+  if (updatedUser) {
+    res.status(200);
+    res.json({
+      _id: user._id,
+      name,
+      email,
+      avatar,
+      isAdmin: user.isAdmin,
+      token: generateToken(updatedUser._id),
+    });
+  } else {
+    res.status(500);
+    throw new Error("Failed to set/update the user's information");
+  }
+});
+
 // Generate JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET_KEY, { expiresIn: "30d" });
 };
-export { registerUser, loginUser, getUser };
+export { registerUser, loginUser, getUser, setProfile };

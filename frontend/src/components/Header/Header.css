@@ -1,3 +1,13 @@
 .no-underline {
   text-decoration: none;
 }
+
+.dropdown {
+  padding-right: 85px;
+}
+
+@media only screen and (max-width: 990px) {
+  .dropdown {
+    padding-right: 0;
+  }
+}

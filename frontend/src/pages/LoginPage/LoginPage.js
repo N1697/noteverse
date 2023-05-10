@@ -7,22 +7,42 @@ import axios from "axios";
 import Loading from "../../components/Loading/Loading";
 import ErrorAlert from "../../components/ErrorAlert/ErrorAlert";
 import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+import { loginUser, reset } from "../../features/user/userSlice.js";
 
 const LoginPage = () => {
+  //States
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const { email, password } = formData;
-  const [loading, setLoading] = useState(false);
 
+  //Hooks
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user, loading, error, success, message } = useSelector(
+    (state) => state.user
+  );
 
+  //Event Handlers
   useEffect(() => {
-    const User = localStorage.getItem("User");
+    if (error) {
+      toast.error(message, {
+        icon: "😭",
+      });
+      console.log(message);
+    }
 
-    User && navigate("/mynotes");
-  }, [navigate]);
+    if (success || user) {
+      navigate("/mynotes");
+      toast.success("Login successful", {
+        icon: "😄",
+      });
+    }
+
+    dispatch(reset());
+  }, [user, error, success, message, navigate, dispatch]);
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -31,37 +51,18 @@ const LoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-
-      setLoading(true);
-
-      const { data } = await axios.post(
-        "/api/users/login",
-        {
-          email,
-          password,
-        },
-        config
-      );
-
-      toast.success("Login successful", {
-        icon: "😄",
-      });
-
-      setLoading(false);
-      localStorage.setItem("User", JSON.stringify(data));
-      navigate("/mynotes");
-    } catch (error) {
-      setLoading(false);
-      toast.error(error.response.data.message, {
-        icon: "😭",
+    if (!email || !password) {
+      return toast.error("Please fill up the fields", {
+        icon: "✏️",
       });
     }
+
+    const userData = {
+      email,
+      password,
+    };
+
+    dispatch(loginUser(userData));
   };
 
   if (loading) {
