@@ -53,7 +53,10 @@ const EditNote = () => {
         },
       };
 
-      const { data } = await axios.get(`/api/notes/${id}`, config);
+      const { data } = await axios.get(
+        `https://noteverse.onrender.com/api/notes/${id}`,
+        config
+      );
 
       setFormData({
         ...formData,

@@ -14,7 +14,10 @@ export const getNotes = createAsyncThunk(
         },
       };
 
-      const { data } = await axios.get("/api/notes", config);
+      const { data } = await axios.get(
+        "https://noteverse.onrender.com/api/notes",
+        config
+      );
       //data = 'notes' received from backend
 
       return data; //This data will then be assigned to 'action.payload'
@@ -45,7 +48,11 @@ export const createNote = createAsyncThunk(
         },
       };
 
-      const { data } = await axios.post("/api/notes", noteData, config);
+      const { data } = await axios.post(
+        "https://noteverse.onrender.com/api/notes",
+        noteData,
+        config
+      );
       //data = 'note' received from backend
 
       return data;
@@ -77,7 +84,7 @@ export const updateNote = createAsyncThunk(
       };
 
       const { data } = await axios.put(
-        `/api/notes/${_id}`,
+        `https://noteverse.onrender.com/api/notes/${_id}`,
         { title, category, content },
         config
       );
@@ -108,7 +115,10 @@ export const deleteNote = createAsyncThunk(
         },
       };
 
-      const { data } = await axios.delete(`/api/notes/${noteID}`, config);
+      const { data } = await axios.delete(
+        `https://noteverse.onrender.com/api/notes/${noteID}`,
+        config
+      );
       //data = '_id' received from backend
 
       return data; //This data will then be assigned to 'action.payload'

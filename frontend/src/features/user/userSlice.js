@@ -15,7 +15,11 @@ export const registerUser = createAsyncThunk(
         },
       };
 
-      const response = await axios.post("/api/users", userData, config);
+      const response = await axios.post(
+        "https://noteverse.onrender.com/api/users",
+        userData,
+        config
+      );
 
       if (response.data) {
         localStorage.setItem("user", JSON.stringify(response.data));
@@ -46,7 +50,11 @@ export const loginUser = createAsyncThunk(
         },
       };
 
-      const response = await axios.post("/api/users/login", userData, config);
+      const response = await axios.post(
+        "https://noteverse.onrender.com/api/users/login",
+        userData,
+        config
+      );
 
       if (response.data) {
         localStorage.setItem("user", JSON.stringify(response.data));
@@ -87,7 +95,11 @@ export const setProfile = createAsyncThunk(
         },
       };
 
-      const { data } = await axios.post("/api/users/profile", userData, config);
+      const { data } = await axios.post(
+        "https://noteverse.onrender.com/api/users/profile",
+        userData,
+        config
+      );
       //data = 'updatedUser'
       if (data) {
         localStorage.setItem("user", JSON.stringify(data));
