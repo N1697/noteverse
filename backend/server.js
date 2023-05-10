@@ -6,7 +6,8 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import colors from "colors";
 import errorHandler from "./middlewares/errorMiddleware.js";
-import path, { fileURLToPath } from "path";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,21 +20,18 @@ app.use(cors());
 dotenv.config();
 connectDB();
 
-//Routes
+// Routes
 app.use("/api/users", userRoutes);
 app.use("/api/notes", noteRoutes);
-// app.use("/", (req, res) => {
-//   res.send("API is running");
-// });
 
 //========== DEPLOYMENT ==========
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/build")));
+  const frontendBuildPath = path.join(__dirname, "../frontend/build");
+  app.use(express.static(frontendBuildPath));
 
   app.get("*", (req, res) => {
-    res.sendFile(
-      path.resolve(__dirname, "../", "frontend", "build", "index.html")
-    );
+    const indexHtmlPath = path.resolve(frontendBuildPath, "index.html");
+    res.sendFile(indexHtmlPath);
   });
 } else {
   app.get("/", (req, res) => res.send("Not in production environment"));
@@ -44,6 +42,6 @@ if (process.env.NODE_ENV === "production") {
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, (req, res) => {
+app.listen(PORT, () => {
   console.log(`Server is running on PORT: ${PORT}`);
 });
